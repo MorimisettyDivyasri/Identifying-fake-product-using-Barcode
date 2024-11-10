@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #verify-result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        #barcode-canvas {
+            display: none; /* Initially hide the canvas */
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
+    <script>
+        let videoElement;
+        let canvasElement;
+        let canvasContext;
+
+        function startScanner() {
+            videoElement = document.getElementById('video');
+            canvasElement = document.getElementById('barcode-canvas');
+            canvasContext = canvasElement.getContext('2d');
+            const constraints = {
+                video: {
+                    facingMode: 'environment' // Use rear camera if available
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    videoElement.srcObject = stream;
+                    videoElement.setAttribute("playsinline", true); // Required to tell iOS to use inline video
+                    videoElement.play();
+                    requestAnimationFrame(scan);
+                })
+                .catch(err => {
+                    alert("Error accessing camera: " + err);
+                });
+        }
+
+        function scan() {
+            canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, canvasElement.width, canvasElement.height);
+            if (code) {
+                displayResult(code.data);
+            } else {
+                requestAnimationFrame(scan);
+            }
+        }
+
+        function displayResult(barcode) {
+            const resultDiv = document.getElementById('verify-result');
+            
+            // Simulate database of valid and fake barcodes
+            const validBarcodes = ["123456789012", "987654321098"];
+            const fakeBarcodes = ["000111222333", "444555666777"];
+
+            // Check for product verification
+            if (validBarcodes.includes(barcode)) {
+                resultDiv.innerHTML = `
+                    <h2>Product Verification Result</h2>
+                    <p><strong>Barcode:</strong> ${barcode}</p>
+                    <p>Status: <span style="color: green;">Authentic</span></p>
+                    <p>Product Details: Example Product Details...</p>
+                `;
+            } else if (fakeBarcodes.includes(barcode)) {
+                resultDiv.innerHTML = `
+                    <h2>Product Verification Result</h2>
+                    <p><strong>Barcode:</strong> ${barcode}</p>
+                    <p>Status: <span style="color: red;">Fake</span></p>
+                    <p>Warning: This product is identified as fake.</p>
+                `;
+                notifyUser("Fake product detected. Please take caution.");
+            } else {
+                resultDiv.innerHTML = `
+                    <h2>Product Verification Result</h2>
+                    <p><strong>Barcode:</strong> ${barcode}</p>
+                    <p>Status: <span style="color: orange;">Unknown</span></p>
+                    <p>Error: Invalid or unregistered product.</p>
+                `;
+            }
+
+            logVerificationAttempt(barcode, resultDiv.innerHTML);
+        }
+
+        function notifyUser(message) {
+            // Display a notification for fake product detection
+            alert(message); // For this example, an alert is used. In a real system, push notifications could be implemented.
+        }
+
+        function logVerificationAttempt(barcode, result) {
+            // Simulate logging by outputting to the console
+            console.log({
+                barcode: barcode,
+                result: result,
+                timestamp: new Date().toLocaleString()
+            });
+        }
+
+        function stopScanner() {
+            if (videoElement) {
+                const stream = videoElement.srcObject;
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+                videoElement.srcObject = null;
+            }
+        }
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>Product Verification</h1>
+            <p>Scan a product barcode using your camera:</p>
+            <video id="video" width="400" height="300"></video>
+            <canvas id="barcode-canvas" width="400" height="300"></canvas>
+            <div>
+                <button onclick="startScanner()">Start Scanning</button>
+                <button onclick="stopScanner()">Stop Scanning</button>
+            </div>
+            <div id="verify-result"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+</body>
+</html>

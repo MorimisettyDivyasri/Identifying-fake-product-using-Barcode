@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Product Detection Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+        .container input, .container button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fake Product Detection</h2>
+        <input type="text" id="barcode" placeholder="Enter Barcode">
+        <input type="text" id="productName" placeholder="Enter Product Name">
+        <button onclick="addFakeProduct()">Add Fake Product</button>
+        <button onclick="checkProduct()">Check Product</button>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        // In-memory 'database' for storing fake products
+        const fakeProductDatabase = [];
+
+        // Function to add a fake product to the database
+        function addFakeProduct() {
+            const barcode = document.getElementById("barcode").value.trim();
+            const productName = document.getElementById("productName").value.trim();
+            const message = document.getElementById("message");
+
+            if (barcode === "" || productName === "") {
+                message.textContent = "Error: Barcode and Product Name are required.";
+                message.style.color = "red";
+                return;
+            }
+
+            // Check if the product is already marked as fake
+            const existingProduct = fakeProductDatabase.find(product => product.barcode === barcode);
+            if (existingProduct) {
+                message.textContent = "This product is already marked as fake.";
+                message.style.color = "orange";
+            } else {
+                // Add new fake product
+                fakeProductDatabase.push({ barcode, productName, timestamp: new Date().toLocaleString() });
+                message.textContent = "Fake product added successfully.";
+                message.style.color = "green";
+            }
+            
+            // Clear input fields
+            document.getElementById("barcode").value = "";
+            document.getElementById("productName").value = "";
+        }
+
+        // Function to check if a product is fake
+        function checkProduct() {
+            const barcode = document.getElementById("barcode").value.trim();
+            const productName = document.getElementById("productName").value.trim();
+            const message = document.getElementById("message");
+
+            if (barcode === "" && productName === "") {
+                message.textContent = "Error: Enter either a Barcode or Product Name to check.";
+                message.style.color = "red";
+                return;
+            }
+
+            // Search the fake product database
+            const foundProduct = fakeProductDatabase.find(product =>
+                product.barcode === barcode || product.productName.toLowerCase() === productName.toLowerCase()
+            );
+
+            if (foundProduct) {
+                message.textContent = `Fake product detected! Product: ${foundProduct.productName}, Timestamp: ${foundProduct.timestamp}`;
+                message.style.color = "red";
+            } else {
+                message.textContent = "No fake product found in the database.";
+                message.style.color = "green";
+            }
+            
+            // Clear input fields
+            document.getElementById("barcode").value = "";
+            document.getElementById("productName").value = "";
+        }
+    </script>
+</body>
+</html>

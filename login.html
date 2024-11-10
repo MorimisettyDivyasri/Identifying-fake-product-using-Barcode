@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-container button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="exit()">Exit</button>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        // Set valid username and password
+        const validUsername = "user123";
+        const validPassword = "password123";
+
+        function login() {
+            // Get input values
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const message = document.getElementById("message");
+
+            // Clear previous message
+            message.textContent = "";
+
+            // Check if fields are empty
+            if (username === "") {
+                message.textContent = "Error: Username field is empty.";
+                return;
+            }
+            if (password === "") {
+                message.textContent = "Error: Password field is empty.";
+                return;
+            }
+
+            // Validate username and password
+            if (username === validUsername && password === validPassword) {
+                message.style.color = "green";
+                message.textContent = "Success: User is logged in successfully.";
+            } else if (username !== validUsername && password !== validPassword) {
+                message.textContent = "Error: Invalid username and password.";
+            } else if (username !== validUsername) {
+                message.textContent = "Error: Invalid username.";
+            } else if (password !== validPassword) {
+                message.textContent = "Error: Invalid password.";
+            }
+        }
+
+        function exit() {
+            // Redirect to another page or close the application
+            alert("Application exiting...");
+            window.location.href = "https://www.example.com"; // Change URL as needed
+        }
+    </script>
+</body>
+</html>

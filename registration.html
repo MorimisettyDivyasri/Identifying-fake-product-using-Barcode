@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .error {
+            color: red;
+        }
+        .tooltip {
+            display: inline-block;
+            position: relative;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <script>
+        let existingUsers = {
+            "testuser": "testuser@example.com"
+        };
+
+        function validateRegistration(event) {
+            event.preventDefault(); // Prevent form submission
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirm-password').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = ''; // Clear previous results
+
+            // Test Case 1: Check for empty required fields
+            if (!username || !email || !password || !confirmPassword || !phone) {
+                resultDiv.innerHTML = '<p class="error">Error: All fields are required.</p>';
+                return;
+            }
+
+            // Test Case 2: Invalid email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                resultDiv.innerHTML = '<p class="error">Error: Please enter a valid email address.</p>';
+                return;
+            }
+
+            // Test Case 3: Password mismatch
+            if (password !== confirmPassword) {
+                resultDiv.innerHTML = '<p class="error">Error: Passwords do not match.</p>';
+                return;
+            }
+
+            // Test Case 4: Weak password (less than 8 characters or no mix of letters and numbers)
+            const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+            if (!strongPasswordRegex.test(password)) {
+                resultDiv.innerHTML = '<p class="error">Error: Password must be at least 8 characters long and contain both letters and numbers.</p>';
+                return;
+            }
+
+            // Test Case 5: Duplicate email or username
+            if (existingUsers[username.toLowerCase()] || Object.values(existingUsers).includes(email.toLowerCase())) {
+                resultDiv.innerHTML = '<p class="error">Error: Username or email is already in use.</p>';
+                return;
+            }
+
+            // Test Case 6: Invalid phone number format
+            const phoneRegex = /^[0-9]{10}$/; // 10-digit phone number
+            if (!phoneRegex.test(phone)) {
+                resultDiv.innerHTML = '<p class="error">Error: Please enter a valid 10-digit phone number.</p>';
+                return;
+            }
+
+            // Test Case 7: Successful registration
+            existingUsers[username.toLowerCase()] = email.toLowerCase(); // Simulate user registration
+            resultDiv.innerHTML = `<p>Registration successful! Welcome, ${username}.</p>`;
+        }
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>Registration</h1>
+            <p>Please fill in the form to create an account.</p>
+            <form onsubmit="validateRegistration(event)">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required maxlength="20"> <!-- Limit to 20 characters -->
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required maxlength="50"> <!-- Limit to 50 characters -->
+                </div>
+                <div class="tooltip">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required placeholder="8+ characters, letters & numbers" minlength="8" maxlength="20"> <!-- Min 8, Max 20 characters -->
+                    <span class="tooltiptext">Password must contain at least 8 characters with both letters and numbers.</span>
+                </div>
+                <div>
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" required minlength="8" maxlength="20"> <!-- Min 8, Max 20 characters -->
+                </div>
+                <div>
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" required maxlength="10"> <!-- Limit to 10 digits -->
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            <div id="result"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Registration System</p>
+    </footer>
+</body>
+</html>

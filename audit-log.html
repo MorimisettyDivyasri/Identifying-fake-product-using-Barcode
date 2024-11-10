@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Log</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #login {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #login input {
+            padding: 10px;
+            margin-right: 10px;
+        }
+        #login button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Audit Log</h1>
+        <div id="login">
+            <input type="text" id="username" placeholder="Enter Admin Username">
+            <button onclick="login()">Login</button>
+        </div>
+        <table id="auditTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-10-01 10:00 AM</td>
+                    <td>User1</td>
+                    <td>Barcode Scan</td>
+                    <td>Scanned barcode: 1234567890123</td>
+                </tr>
+                <tr>
+                    <td>2024-10-01 11:00 AM</td>
+                    <td>User2</td>
+                    <td>Product Verification</td>
+                    <td>Verified product with barcode: 9876543210987</td>
+                </tr>
+                <tr>
+                    <td>2024-10-02 09:30 AM</td>
+                    <td>User1</td>
+                    <td>Feedback Submitted</td>
+                    <td>Feedback regarding product quality.</td>
+                </tr>
+                <tr>
+                    <td>2024-10-02 10:15 AM</td>
+                    <td>User3</td>
+                    <td>Login</td>
+                    <td>Successful login from IP: 192.168.1.1</td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="clearButton" onclick="clearLogs()" style="display: none;">Clear Logs</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+
+    <script>
+        // Function to simulate admin-only login access
+        function login() {
+            const username = document.getElementById("username").value;
+            if (username.toLowerCase() === "admin") {
+                document.getElementById("auditTable").style.display = "table";
+                document.getElementById("clearButton").style.display = "inline-block";
+                document.getElementById("login").style.display = "none";
+                alert("Admin access granted.");
+            } else {
+                alert("Access denied. Admins only.");
+            }
+        }
+
+        // Function to clear logs with confirmation and feedback
+        function clearLogs() {
+            if (confirm("Are you sure you want to clear all logs?")) {
+                const rows = document.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    row.remove();
+                });
+                alert("Logs cleared successfully.");
+            }
+        }
+
+        // Function to add a new log entry, with accurate timestamp
+        function addLogEntry(user, action, details) {
+            const tableBody = document.querySelector("#auditTable tbody");
+            const newRow = document.createElement("tr");
+
+            // Get current timestamp in the desired format
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            // Add log entry to the table
+            newRow.innerHTML = `
+                <td>${formattedDate}</td>
+                <td>${user}</td>
+                <td>${action}</td>
+                <td>${details}</td>
+            `;
+            tableBody.appendChild(newRow);
+            alert("New log entry added successfully.");
+        }
+
+        // Sample calls to addLogEntry function
+        // Uncomment these to test adding new entries programmatically
+        // addLogEntry("User4", "Barcode Scan", "Scanned barcode: 4567891234567");
+        // addLogEntry("User5", "Login", "Login failed attempt from IP: 192.168.1.50");
+    </script>
+</body>
+</html>

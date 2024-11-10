@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Notifications</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .notification {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .info {
+            background-color: #e7f3fe;
+            border-color: #b8daff;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>User Notifications</h1>
+            <div id="notifications">
+                <!-- Notifications based on test cases -->
+                <div class="notification success">
+                    <strong>Success:</strong> Login successful!
+                </div>
+                <div class="notification error">
+                    <strong>Error:</strong> Failed login attempt. Please check your credentials.
+                </div>
+                <div class="notification success">
+                    <strong>Success:</strong> Your profile has been updated.
+                </div>
+                <div class="notification info">
+                    <strong>Info:</strong> You have a new message.
+                </div>
+                <div class="notification success">
+                    <strong>Success:</strong> Password changed successfully.
+                </div>
+            </div>
+            <button onclick="clearNotifications()">Clear All Notifications</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+
+    <script>
+        // Clear all notifications
+        function clearNotifications() {
+            const notificationsContainer = document.getElementById('notifications');
+            notificationsContainer.innerHTML = ''; // Clears all notification elements
+            alert("All notifications have been cleared.");
+        }
+
+        // Add a new notification dynamically
+        function addNotification(type, message) {
+            const notificationsContainer = document.getElementById('notifications');
+            const newNotification = document.createElement("div");
+            newNotification.classList.add("notification", type);
+            newNotification.innerHTML = `<strong>${capitalize(type)}:</strong> ${message}`;
+            notificationsContainer.appendChild(newNotification);
+        }
+
+        // Capitalize first letter for notification types
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Sample calls to addNotification for testing
+        // addNotification("info", "This is a test info notification.");
+        // addNotification("warning", "This is a test warning notification.");
+    </script>
+</body>
+</html>

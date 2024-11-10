@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanning</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #scan-result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+    <script>
+        let scannedBarcodes = new Set(); // To track duplicate barcodes
+
+        function scanBarcode(event) {
+            event.preventDefault(); // Prevent form submission
+            const fileInput = document.getElementById('barcode-image');
+            const resultDiv = document.getElementById('scan-result');
+
+            // Basic validation for file upload
+            if (!fileInput.files.length) {
+                resultDiv.innerHTML = '<p style="color: red;">Error: No barcode detected. Please upload a barcode image.</p>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const fileName = file.name.toLowerCase();
+                resultDiv.innerHTML = '<h2>Scan Result</h2>';
+
+                // Simulate barcode scanning conditions
+                if (scannedBarcodes.has(fileName)) {
+                    // Duplicate barcode case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Notice:</strong> Product already scanned.</p>
+                    `;
+                } else if (fileName.includes('valid')) {
+                    // Valid barcode case
+                    resultDiv.innerHTML += `
+                        <p><strong>Product Name:</strong> Sample Product</p>
+                        <p><strong>Barcode:</strong> ${file.name}</p>
+                        <p><strong>Authenticity:</strong> Authentic</p>
+                    `;
+                    scannedBarcodes.add(fileName); // Mark the barcode as scanned
+                } else if (fileName.includes('invalid')) {
+                    // Invalid barcode case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Error:</strong> Invalid barcode or product not found.</p>
+                    `;
+                } else if (fileName.includes('fake')) {
+                    // Fake product case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Alert:</strong> This product has been identified as fake.</p>
+                    `;
+                } else if (fileName.includes('damaged')) {
+                    // Damaged barcode case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Error:</strong> Barcode is unreadable. Please try again.</p>
+                    `;
+                } else if (fileName.includes('non-numeric')) {
+                    // Non-numeric barcode case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Error:</strong> Invalid barcode format. Please scan a valid barcode.</p>
+                    `;
+                } else if (fileName.includes('unsupported')) {
+                    // Unsupported barcode type case
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Error:</strong> Unsupported barcode format. Please scan a valid barcode.</p>
+                    `;
+                } else {
+                    // Simulate unknown error or other edge cases
+                    resultDiv.innerHTML += `
+                        <p style="color: red;"><strong>Error:</strong> Unknown error occurred. Please check your network or retry.</p>
+                    `;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>Barcode Scanning</h1>
+            <p>Upload an image of the product with a barcode to verify its authenticity.</p>
+            <form onsubmit="scanBarcode(event)">
+                <div>
+                    <label for="barcode-image">Select a Barcode Image:</label>
+                    <input type="file" id="barcode-image" accept="image/*" required>
+                </div>
+                <button type="submit">Scan Barcode</button>
+            </form>
+            <div id="scan-result"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #feedback-response {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contractor.html">Contractor Page</a></li>
+                <li><a href="feedback.html">Feedback Page</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="registration.html">Register</a></li>
+                <li><a href="barcode-scanning.html">Barcode Scanning</a></li>
+                <li><a href="product-verification.html">Product Verification</a></li>
+                <li><a href="user-notification.html">User Notification</a></li>
+                <li><a href="audit-log.html">Audit Log</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1>Feedback</h1>
+            <p>We appreciate your feedback. Please fill out the form below:</p>
+
+            <form id="feedback-form" novalidate>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required maxlength="50"> <!-- Limit to 50 characters -->
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required maxlength="50"> <!-- Limit to 50 characters -->
+
+                <label for="feedback">Feedback:</label>
+                <textarea id="feedback" name="feedback" rows="5" required maxlength="500"></textarea> <!-- Limit to 500 characters -->
+
+                <button type="submit">Submit</button>
+                <button type="reset">Reset</button>
+            </form>
+
+            <p id="feedback-response" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+
+    <script>
+        // Handle form submission
+        document.getElementById('feedback-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const feedback = document.getElementById('feedback').value.trim();
+            const feedbackResponse = document.getElementById('feedback-response');
+
+            // Validate required fields
+            if (!name || !email || !feedback) {
+                feedbackResponse.innerText = 'All fields are required.';
+                feedbackResponse.style.color = 'red';
+                return;
+            }
+
+            // Validate email format
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                feedbackResponse.innerText = 'Please enter a valid email address.';
+                feedbackResponse.style.color = 'red';
+                return;
+            }
+
+            // Display feedback response
+            feedbackResponse.innerText = `Thank you, ${name}! Your feedback has been received.`;
+            feedbackResponse.style.color = 'green';
+
+            // Log feedback data (simulating saving to database)
+            console.log({ name, email, feedback });
+
+            // Reset form fields
+            this.reset();
+        });
+
+        // Optional: add logic to retrieve and display stored feedback for admin analysis
+        function displayFeedbackData() {
+            // This function would ideally fetch feedback data from the server/database
+            // and display it for analysis. For now, we'll just log a placeholder.
+            console.log('Retrieving feedback data for analysis...');
+        }
+
+        // Call displayFeedbackData function if necessary (for admins only)
+        // displayFeedbackData();
+    </script>
+</body>
+</html>

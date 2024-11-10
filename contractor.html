@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section>
+            <h1>Contractor Information</h1>
+
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" value="Barcode Authenticator" maxlength="50" readonly> <!-- Limit to 50 characters -->
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" value="barcodescanner@gmail.com" maxlength="50" readonly> <!-- Limit to 50 characters -->
+            </div>
+            <div>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" value="9087654324" maxlength="10" readonly> <!-- Limit to 10 digits -->
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <input type="text" id="address" value="VITAP University, Amaravathi" maxlength="100" readonly> <!-- Limit to 100 characters -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Barcode Authenticator System</p>
+    </footer>
+</body>
+</html>
